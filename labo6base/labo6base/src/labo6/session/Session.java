@@ -4,12 +4,15 @@ import labo6.Labo6Main;
 import labo6.Ressources.Gender;
 import labo6.User;
 import labo6.bots.ChatBot;
-import labo6.bots.PatientChatBot;
+import labo6.check.CheckUserBehavior;
+import labo6.check.CheckUserBehaviorAswrAsk;
 import labo6.database.Picture;
 import labo6.database.PictureDatabase;
 import labo6.database.TextDatabase;
 import labo6.database.TextList;
 import labo6.database.TextMessage.TextKey;
+import labo6.wait.WaitBehavior;
+import labo6.wait.WaitBehaviorAsk;
 
 /*
  * Cette classe repr�sente une session d'un utilisateur humain avec un ou
@@ -25,7 +28,7 @@ public class Session
     private final static String CASUAL_SESSION = "casual";
 
     private User human;
-    private ChatBot robot;
+    protected ChatBot robot;
     private Labo6Main ui;
     private boolean ended;
     private Thread sleeper;
@@ -40,7 +43,7 @@ public class Session
 
     public void start()
     {
-        robot = createChatBot(human, "Other", getSuitablePictures(), Gender.random(), this);
+        createChatBot(human, "Other", getSuitablePictures(), Gender.random(), this);
 
         ui.initBackGround(robot);
 
@@ -48,9 +51,9 @@ public class Session
 
         while (!hasEnded())
         {
-            robot.waitForUser();
+            robot.getWait().waitForUser();
 
-            if (robot.checkForWakeUp(human.getUI().getText()))
+            if (robot.getCheck().checkForWakeUp(human.getUI().getText()))
             {
                 robot.appendMessage(generateAnswer(getSuitableMessage()));
             }
@@ -58,7 +61,7 @@ public class Session
     }
 
     /**
-     * Création d'un nouveau PatientChatBot
+     * Création d'un nouveau ChatBot
      * 
      * @param p
      * @param n
@@ -66,9 +69,21 @@ public class Session
      * @param g
      * @return
      */
-    public ChatBot createChatBot(User p, String n, Picture pic, Gender g, Session s)
+    public void createChatBot(User p, String n, Picture pic, Gender g, Session s)
     {
-        return new PatientChatBot(p, n, pic, g, s);
+        robot = new ChatBot(p, n, pic, g, s);
+        robot.setCheck(createCheckBehavior());
+        robot.setWait(createWaitBehavior());
+    }
+
+    public CheckUserBehavior createCheckBehavior()
+    {
+        return new CheckUserBehaviorAswrAsk();
+    }
+
+    public WaitBehavior createWaitBehavior()
+    {
+        return new WaitBehaviorAsk(this, robot);
     }
 
     /**
@@ -142,7 +157,7 @@ public class Session
      */
     public void changeChatBot()
     {
-        robot = createChatBot(human, "Other", getSuitablePictures(), Gender.random(), this);
+        createChatBot(human, "Other", getSuitablePictures(), Gender.random(), this);
         ui.initBackGround(robot);
     }
 

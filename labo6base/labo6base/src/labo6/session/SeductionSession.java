@@ -2,10 +2,8 @@ package labo6.session;
 
 import labo6.Labo6Main;
 import labo6.User;
-import labo6.Ressources.Gender;
-import labo6.bots.ChatBot;
-import labo6.bots.ImpatientChatBot;
-import labo6.bots.PatientChatBot;
+import labo6.check.CheckUserBehavior;
+import labo6.check.CheckUserBehaviorSaySomething;
 import labo6.database.Picture;
 import labo6.database.Picture.PictureKey;
 import labo6.database.PictureDatabase;
@@ -13,6 +11,8 @@ import labo6.database.PictureList;
 import labo6.database.TextDatabase;
 import labo6.database.TextList;
 import labo6.database.TextMessage.TextKey;
+import labo6.wait.WaitBehavior;
+import labo6.wait.WaitBehaviorSaySomething;
 
 /**
  * Représente des messages séduisants
@@ -72,17 +72,15 @@ public class SeductionSession extends Session
         return list.random();
     }
 
-    /**
-     * Création d'un nouveau ImpatientChatBot
-     * 
-     * @param p
-     * @param n
-     * @param pic
-     * @param g
-     * @return ChatBot
-     */
-    public ChatBot createChatBot(User p, String n, Picture pic, Gender g, Session s)
+    @Override
+    public CheckUserBehavior createCheckBehavior()
     {
-        return new ImpatientChatBot(p, n, pic, g, s);
+        return new CheckUserBehaviorSaySomething();
+    }
+
+    @Override
+    public WaitBehavior createWaitBehavior()
+    {
+        return new WaitBehaviorSaySomething(this, robot);
     }
 }
