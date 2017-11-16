@@ -12,16 +12,14 @@ public class ChatBot extends User
     // L'utilisateur avec lequel le robot est en communication.
     private User peer;
     protected static String oldMessage;
-    protected static Session session;
 
     protected WaitBehavior wait;
     protected CheckUserBehavior check;
 
-    public ChatBot(User p, String n, Picture pic, Gender g, Session s)
+    public ChatBot(User p, String n, Picture pic, Gender g)
     {
         super(n, pic, g);
         peer = p;
-        session = s;
     }
 
     public void sleep(int time)

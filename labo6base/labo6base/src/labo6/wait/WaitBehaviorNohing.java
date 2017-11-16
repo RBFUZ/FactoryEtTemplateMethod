@@ -1,13 +1,13 @@
 package labo6.wait;
 
 import labo6.bots.ChatBot;
-import labo6.session.Session;
+import labo6.profil.Profiler;
 
 public class WaitBehaviorNohing extends WaitBehavior
 {
-    public WaitBehaviorNohing(Session s, ChatBot c)
+    public WaitBehaviorNohing(Profiler p, ChatBot c)
     {
-        session = s;
+        profiler = p;
         bot = c;
     }
 

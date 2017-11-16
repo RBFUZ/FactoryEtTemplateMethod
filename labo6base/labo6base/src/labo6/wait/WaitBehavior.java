@@ -1,11 +1,11 @@
 package labo6.wait;
 
 import labo6.bots.ChatBot;
-import labo6.session.Session;
+import labo6.profil.Profiler;
 
 public abstract class WaitBehavior
 {
-    protected Session session;
+    protected Profiler profiler;
     protected ChatBot bot;
 
     public abstract void waitForUser();

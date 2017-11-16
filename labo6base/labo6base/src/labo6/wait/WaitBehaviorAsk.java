@@ -3,13 +3,14 @@ package labo6.wait;
 import labo6.bots.ChatBot;
 import labo6.database.TextList;
 import labo6.database.TextMessage.TextKey;
+import labo6.profil.Profiler;
 import labo6.session.Session;
 
 public class WaitBehaviorAsk extends WaitBehavior
 {
-    public WaitBehaviorAsk(Session s, ChatBot c)
+    public WaitBehaviorAsk(Profiler p, ChatBot c)
     {
-        session = s;
+        profiler = p;
         bot = c;
     }
 
@@ -19,10 +20,10 @@ public class WaitBehaviorAsk extends WaitBehavior
         bot.sleep(3000);
 
         // Génération d'une question
-        TextList list = session.getSuitableMessage();
+        TextList list = profiler.getSuitableMessage();
         list.keep(TextKey.isQuestion, true);
 
         // Affichage de la question
-        bot.appendMessage(session.generateAnswer(list));
+        bot.appendMessage(profiler.generateAnswer(list));
     }
 }

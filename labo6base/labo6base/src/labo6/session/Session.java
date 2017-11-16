@@ -3,16 +3,8 @@ package labo6.session;
 import labo6.Labo6Main;
 import labo6.Ressources.Gender;
 import labo6.User;
-import labo6.bots.ChatBot;
-import labo6.check.CheckUserBehavior;
-import labo6.check.CheckUserBehaviorAswrAsk;
-import labo6.database.Picture;
-import labo6.database.PictureDatabase;
-import labo6.database.TextDatabase;
-import labo6.database.TextList;
-import labo6.database.TextMessage.TextKey;
-import labo6.wait.WaitBehavior;
-import labo6.wait.WaitBehaviorAsk;
+import labo6.profil.NormalProfile;
+import labo6.profil.Profiler;
 
 /*
  * Cette classe repr�sente une session d'un utilisateur humain avec un ou
@@ -28,10 +20,10 @@ public class Session
     private final static String CASUAL_SESSION = "casual";
 
     private User human;
-    protected ChatBot robot;
     private Labo6Main ui;
     private boolean ended;
     private Thread sleeper;
+    protected static Profiler profiler;
 
     public Session(Labo6Main l, User u)
     {
@@ -43,88 +35,31 @@ public class Session
 
     public void start()
     {
-        createChatBot(human, "Other", getSuitablePictures(), Gender.random(), this);
+        createProfiler();
 
-        ui.initBackGround(robot);
+        profiler.createChatBot(human, "Other", profiler.getSuitablePictures(), Gender.random(), this);
 
-        robot.appendMessage(generateGreeting(getSuitableMessage()));
+        ui.initBackGround(profiler.getRobot());
+
+        profiler.getRobot().appendMessage(profiler.generateGreeting(profiler.getSuitableMessage()));
 
         while (!hasEnded())
         {
-            robot.getWait().waitForUser();
+            profiler.getRobot().getWait().waitForUser();
 
-            if (robot.getCheck().checkForWakeUp(human.getUI().getText()))
+            if (profiler.getRobot().getCheck().checkForWakeUp(human.getUI().getText()))
             {
-                robot.appendMessage(generateAnswer(getSuitableMessage()));
+                profiler.getRobot().appendMessage(profiler.generateAnswer(profiler.getSuitableMessage()));
             }
         }
     }
 
     /**
-     * Création d'un nouveau ChatBot
-     * 
-     * @param p
-     * @param n
-     * @param pic
-     * @param g
-     * @return
+     * Création d'un profil normal
      */
-    public void createChatBot(User p, String n, Picture pic, Gender g, Session s)
+    public void createProfiler()
     {
-        robot = new ChatBot(p, n, pic, g, s);
-        robot.setCheck(createCheckBehavior());
-        robot.setWait(createWaitBehavior());
-    }
-
-    public CheckUserBehavior createCheckBehavior()
-    {
-        return new CheckUserBehaviorAswrAsk();
-    }
-
-    public WaitBehavior createWaitBehavior()
-    {
-        return new WaitBehaviorAsk(this, robot);
-    }
-
-    /**
-     * Génération d'un message aléatoire
-     * 
-     * @return String Le message généré
-     */
-    public String generateAnswer(TextList list)
-    {
-        return list.random().getMessage();
-    }
-
-    /**
-     * Génération d'un message de bienvenue
-     * 
-     * @return
-     */
-    public String generateGreeting(TextList list)
-    {
-        list.keep(TextKey.isGreeting, true);
-        return generateAnswer(list);
-    }
-
-    /**
-     * Génération d'une liste de message
-     * 
-     * @return TextList
-     */
-    public TextList getSuitableMessage()
-    {
-        return TextDatabase.getAllMessages().clone();
-    }
-
-    /**
-     * Génération d'une image aléatoire. L'ensemble des images sont autorisées
-     * 
-     * @return Picture Une image générée
-     */
-    public Picture getSuitablePictures()
-    {
-        return PictureDatabase.getAllPictures().random();
+        profiler = new NormalProfile();
     }
 
     /**
@@ -157,8 +92,8 @@ public class Session
      */
     public void changeChatBot()
     {
-        createChatBot(human, "Other", getSuitablePictures(), Gender.random(), this);
-        ui.initBackGround(robot);
+        profiler.createChatBot(human, "Other", profiler.getSuitablePictures(), Gender.random(), this);
+        ui.initBackGround(profiler.getRobot());
     }
 
     public synchronized void end()
