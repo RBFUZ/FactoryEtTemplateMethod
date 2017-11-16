@@ -1,23 +1,20 @@
 package labo6.check;
 
-public class CheckUserBehaviorHearing extends CheckUserBehavior
+public class CheckUserBehaviorTroll extends CheckUserBehavior
 {
-    /**
-     * Constructeur par défaut
-     */
-    public CheckUserBehaviorHearing()
+    public CheckUserBehaviorTroll()
     {
         oldMessage = "";
     }
-
+    
     @Override
     public boolean checkForWakeUp(String message)
     {
         boolean result = false;
 
-        if (!message.equals("") && message.equals(oldMessage))
+        if (!message.equals("") && !message.equals(oldMessage))
             result = true;
-
+        
         oldMessage = message;
         return result;
     }

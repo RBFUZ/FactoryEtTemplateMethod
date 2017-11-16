@@ -93,6 +93,17 @@ public abstract class Profiler
 
         return list;
     }
+    
+    public TextList filterMessageCountryReverse(TextList list)
+    {
+        if (robot.getPeer().getCountry().equals(Country.Japan)
+                || robot.getPeer().getCountry().equals(Country.UnitedStates))
+            list.keep(TextKey.language, Language.french);
+        else
+            list.keep(TextKey.language, Language.english);
+
+        return list;
+    }
 
     /**
      * Filtre et retourne que des comics

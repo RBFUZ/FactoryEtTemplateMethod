@@ -17,6 +17,7 @@ public class Session
     private final static String NORMAL_SESSION = "normal";
     private final static String SEDUCTION_SESSION = "seduction";
     private final static String CASUAL_SESSION = "casual";
+    private final static String TROLL_SESSION = "troll";
 
     private User human;
     private Labo6Main ui;
@@ -81,6 +82,8 @@ public class Session
                 return new SeductionSession(labo6Main, humanUser);
             case CASUAL_SESSION:
                 return new CasualSession(labo6Main, humanUser);
+            case TROLL_SESSION:
+                return new TrollSession(labo6Main, humanUser);
             default:
                 throw new IllegalArgumentException("Wrong session type: " + sessionType);
         }
