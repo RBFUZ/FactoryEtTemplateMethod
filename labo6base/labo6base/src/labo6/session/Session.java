@@ -6,13 +6,12 @@ import labo6.User;
 import labo6.profil.NormalProfile;
 import labo6.profil.Profiler;
 
-/*
+/**
  * Cette classe repr�sente une session d'un utilisateur humain avec un ou
  * plusieurs robots. La session se termine lorsqu'on d�tecte que l'utilisateur
  * humain s'est d�connect� (change de pays ou de genre, via les boutons "PAYS"
  * et "GENRE").
  */
-
 public class Session
 {
     private final static String NORMAL_SESSION = "normal";

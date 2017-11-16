@@ -74,7 +74,7 @@ public class PictureList implements Cloneable {
 	
 	public Picture random(){
 		Random generator = new Random();
-		return pics.get(generator.nextInt(pics.size()));		
+		return pics.get(generator.nextInt(pics.size()));
 	}
 
 }

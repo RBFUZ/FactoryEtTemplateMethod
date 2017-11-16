@@ -2,10 +2,15 @@ package labo6.profil;
 
 import labo6.User;
 import labo6.bots.ChatBot;
+import labo6.Ressources.Country;
 import labo6.Ressources.Gender;
 import labo6.check.CheckUserBehavior;
 import labo6.database.Picture;
+import labo6.database.PictureList;
 import labo6.database.TextList;
+import labo6.database.Picture.PictureKey;
+import labo6.database.TextMessage.Language;
+import labo6.database.TextMessage.TextKey;
 import labo6.session.Session;
 import labo6.wait.WaitBehavior;
 
@@ -38,7 +43,7 @@ public abstract class Profiler
      * 
      * @return Picture
      */
-    public abstract Picture getSuitablePictures();
+    public abstract PictureList getSuitablePictures();
 
     /**
      * Génération d'une liste de message
@@ -68,13 +73,51 @@ public abstract class Profiler
      * @param n
      * @param pic
      * @param g
+     * @param s
      */
-    public void createChatBot(User p, String n, Picture pic, Gender g, Session s)
+    public abstract void createChatBot(User p, String n, PictureList pic, Gender g, Session s);
+
+    /**
+     * Filtre le language en fonction du pays d'origine de l'interlocuteur
+     * 
+     * @param list
+     * @return TextList
+     */
+    public TextList filterMessageCountry(TextList list)
     {
-        robot = new ChatBot(p, n, pic, g);
-        robot.setCheck(createCheckBehavior());
-        robot.setWait(createWaitBehavior());
-        session = s;
+        if (robot.getPeer().getCountry().equals(Country.Japan)
+                || robot.getPeer().getCountry().equals(Country.UnitedStates))
+            list.keep(TextKey.language, Language.english);
+        else
+            list.keep(TextKey.language, Language.french);
+
+        return list;
+    }
+
+    /**
+     * Filtre et retourne que des comics
+     * 
+     * @param list
+     * @param country
+     * @return PictureList
+     */
+    public PictureList filterPictureJapan(PictureList list, Country country)
+    {
+        if (country.equals(Country.Japan))
+            list.keep(PictureKey.isComic, true);
+
+        return list;
+    }
+
+    /**
+     * Retourne une picture random d'une liste prédéfini
+     * 
+     * @param list
+     * @return Picture
+     */
+    public Picture generatePicture(PictureList list)
+    {
+        return list.random();
     }
 
     /**
